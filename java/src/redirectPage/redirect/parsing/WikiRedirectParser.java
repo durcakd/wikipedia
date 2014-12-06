@@ -97,7 +97,14 @@ public class WikiRedirectParser {
 				if (text.toLowerCase().startsWith("#redirect") || text.toLowerCase().startsWith("#presmeruj")) {
 					Matcher redirectMatcher = linkPattern.matcher(text);
 					if(redirectMatcher.find()) {
-						String[] redirects = redirectMatcher.group().replaceAll("[\\[\\]]","").trim().split("#");
+						
+						String redirectTemp = redirectMatcher.group().replaceAll("[\\[\\]]","").trim();
+						if( redirectTemp.startsWith(":")){
+							redirectTemp = redirectTemp.substring(1);
+						}	
+						
+						String[] redirects = redirectTemp.split("#");
+						
 						if (1 == redirects.length) {
 							redirect = title;
 							title = redirects[0];
@@ -195,7 +202,9 @@ public class WikiRedirectParser {
 			}
 
 			// aaa|bbb -> bbb
-			input = input.substring(input.lastIndexOf('|')+1);    
+			if (!input.substring(input.lastIndexOf('|')+1).trim().isEmpty()){
+				input = input.substring(input.lastIndexOf('|')+1);
+			}    
 		}
 		info(" >>>>2 " + input);
 		return input;
@@ -285,7 +294,7 @@ public class WikiRedirectParser {
 			//log.info("SUBUB: " + subtitle + ">>>>>" + subtitleMatcher.group().replaceAll("==", "") + "<<<<");		
 			return subtitleMatcher.group().replaceAll("==", "");
 		}else {
-			log.info("\nREDUCER FAIL: Subtext for: " + subtitle );// + " NOT FOUND IN \n" + text);
+			log.info("NO EXISTS SUBTITLE: " + subtitle);
 		}
 		return "";
 	}
@@ -296,7 +305,7 @@ public class WikiRedirectParser {
 	 * @param subtitle
 	 * @return
 	 */
-	public String findSubtext(String text, String subtitle) {
+	public String findSubtext(String text, String subtitle, String newTitle, String origTitle) {
 		subtitle = subtitle.replaceAll("\\(", "\\\\\\(").replaceAll("\\)", "\\\\\\)").replaceAll("–", "-");
 		text = text.replaceAll("–", "-");
 		String subpattern = "[^=\\p{L}]*?"+subtitle.trim()+ "[^=\\p{L}]*?";
@@ -339,7 +348,13 @@ public class WikiRedirectParser {
 				}
 			}
 		}
-		return resBuf.toString();
+		String res = resBuf.toString();
+		if (res.isEmpty()) {
+			log.info("NO EXISTS SUBTITLE: " + subtitle + " IN PAGE " + origTitle + " FOR REDIRECT" + newTitle);
+			return text;
+		} else {
+			return res; 
+		}	
 	}
 
 

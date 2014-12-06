@@ -50,6 +50,7 @@ public class WikiIndex {
 	Directory index;
 	IndexWriterConfig writerConfig;
 	Analyzer analyzer;
+	int counterOfWrongRedirect;
 
 	public static Logger log = Logger.getLogger(WikiIndex.class);
 	public static int MAX_HINTS = 10;
@@ -106,6 +107,7 @@ public class WikiIndex {
 
 
 	public void indexFile( String filePath, String indexDir) {
+		counterOfWrongRedirect = 0;
 		writerConfig = new IndexWriterConfig(Version.LUCENE_CURRENT, analyzer);
 		
 
@@ -153,6 +155,7 @@ public class WikiIndex {
 		finally {
 			try {
 				inputStream.close();
+				log.info("INCORRECT REDIRECT COUNT: " + counterOfWrongRedirect);
 			} catch (IOException e) {
 				log.error( "Error: close file", e);
 			}
@@ -171,7 +174,12 @@ public class WikiIndex {
 					title = title.trim();
 					if(!title.isEmpty()){
 						if ( null != indexWriter){
-							addDoc( indexWriter, title, text);
+							if ( text.trim().isEmpty()) {
+								log.info("WRONG-RED: " + title);
+								counterOfWrongRedirect++;
+							} else {
+								addDoc( indexWriter, title, text);
+							}
 						}
 					}
 				}

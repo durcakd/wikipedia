@@ -50,7 +50,7 @@ public class WikiRedirectReducer extends Reducer<Text, Text, Text, Text> {
 					String realSubTitle = pair[0];
 					String newTitle = pair[1];
 
-					String subText = parser.findSubtext(text, realSubTitle);
+					String subText = parser.findSubtext(text, realSubTitle, newTitle, key.toString());
 
 					StringBuffer subBuf = new StringBuffer();		
 					subBuf.append(" ");
