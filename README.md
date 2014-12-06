@@ -17,7 +17,7 @@ All needed libraries for Hadoop and Lucene are included in  data/lib/ directory
 First, clone the repository.
 ```
 git clone https://github.com/durcakd/wikipedia.git
-cd aol-statistics
+cd wikipedia
 ```
 
 ### Data
