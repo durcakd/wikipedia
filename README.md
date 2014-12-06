@@ -22,11 +22,9 @@ cd wikipedia
 
 ### Data
 
-* Example data in test/ directory
+* Example data included in test/ directory
 * Download wikipedia dump skwiki-latest-pages-articles.xml
 from http://dumps.wikimedia.org/skwiki/latest/ 
- AOL dataset along with DBpedia Wiki titles, samples are included.
-
 
 ### Run
 
@@ -34,7 +32,6 @@ Compile and run Java GUI aplication and:
 * choose input file to parse - output file will be created
 * choose output file from parsing to index - index will be created 
 * search
-
 
 ## Contributing
 
